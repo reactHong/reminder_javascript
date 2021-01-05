@@ -1,0 +1,60 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Javascript</title>
+  <style>
+    #signup {
+      padding: 30px;
+    }
+    #signin {
+      padding: 30px;
+    }
+  </style>
+</head>
+
+<body>
+  <div id="currentUser">Current User: <strong></strong></div>
+  <div id="signout">
+    <button>Sign Out</button>
+  </div>
+  <div id="signup">
+    <form>
+      <div><input type="text" placeholder="Email" value="" name="signupEmail"/></div>
+      <div><input type="password" placeholder="Password" value="" name="signupPassword"/></div>
+      <div><input type="name" placeholder="Name" value="Hong" name="signupName"/></div>
+      <div><button>Sign Up</button></div>
+    </form>
+  </div>
+  <div id="signin">
+    <form>
+      <div><input type="text" placeholder="Email" value="" name="signinEmail"/></div>
+      <div><input type="password" placeholder="Password" value="" name="signinPassword"/></div>
+      <div><button>Sign In</button></div>
+    </form>
+  </div>
+
+  <script src="https://www.gstatic.com/firebasejs/8.2.1/firebase-app.js"></script>
+  <script src="https://www.gstatic.com/firebasejs/8.2.1/firebase-auth.js"></script>
+  <script src="https://www.gstatic.com/firebasejs/8.2.1/firebase-firestore.js"></script>
+
+  
+  <script>
+    // Your web app's Firebase configuration
+    var firebaseConfig = {
+    };
+    // Initialize Firebase
+    firebase.initializeApp(firebaseConfig);
+
+    const auth = firebase.auth();
+    const db = firebase.firestore();
+
+    db.settings({ timestampsInSnapshots: true });
+  </script>
+  <script src="./scripts/auth.js"></script>
+  <script src="./scripts/index.js"></script>
+</body>
+
+</html>
