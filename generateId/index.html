@@ -1,0 +1,30 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Redux</title>
+</head>
+
+<body>
+  <div id="generatedID">
+    <span></span>
+    <button>Generate ID</button>
+  </div>
+  <script>
+    //TODO: how to guarantee this is unique
+    function generateID() {
+      return Math.random().toString(36).substring(2) + (new Date()).getTime().toString(36);
+    }
+    
+    const button = generatedID.querySelector("#generatedID button");
+    button.addEventListener("click", () => {
+      const generatedID = document.querySelector("#generatedID span");
+      generatedID.innerHTML = generateID();
+    });
+    
+  </script>
+</body>
+
+</html>
