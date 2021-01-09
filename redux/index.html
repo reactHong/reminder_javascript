@@ -92,7 +92,7 @@
         return state;
       }
     }
-    
+
     function checkAndDispatch(store, action) {
       if (action.type === ADD_TODO &&
           action.todo.name.toLowerCase().includes('bitcoin')) {
@@ -106,10 +106,33 @@
       return store.dispatch(action);
     }
 
+    const checker = (store) => (next) => (action) => {
+      console.log("[checker]");
+      if (action.type === ADD_TODO &&
+          action.todo.name.toLowerCase().includes('bitcoin')) {
+        alert("Nope. That's a bad idea.");
+      }
+      if (action.type === ADD_GOAL &&
+          action.goal.name.toLowerCase().includes('bitcoin')) {
+        alert("Nope. That's a bad idea.");
+      }
+      return next(action);
+    };
+
+    const logger = (store) => (next) => (action) => {
+      console.log("[logger]");
+      console.group(action.type);
+        console.log(action);
+      const result = next(action);
+        console.log("state: ", store.getState());
+      console.groupEnd();
+      return result;
+    };
+
     const store = Redux.createStore(Redux.combineReducers({
       todos,
       goals,
-    }));
+    }), Redux.applyMiddleware(checker, logger));
 
     const unsubscribe1 = store.subscribe(() => {
       const { goals, todos } = store.getState();
