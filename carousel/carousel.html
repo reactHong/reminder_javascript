@@ -1,0 +1,231 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Carousel</title>
+  <style>
+    body {
+      margin: 0;
+      padding: 0;
+    }
+    .discoveryWrapper {
+      max-width: 1200px;
+      margin: 0 auto;
+      padding: 0 30px;
+    }
+    
+    /* Header */
+    .headerContainer {
+      background-color: yellow;
+      display: flex;
+      flex-direction: row;
+      justify-content: space-between;
+    }
+    .buttonsContainer {
+      display: flex;
+      align-items: center;
+    }
+
+    /* Carousel */
+    .trackContainer {
+      background-color: yellowgreen;
+    }
+    .cardTrack {
+      display: flex;
+      flex-direction: row;
+      transition: transform 0.5s;
+    }
+    /* Card */
+    .card, .empty {
+      background-color: red;
+      /* TODO: It should be changed by JS */
+      width: 232px; 
+      min-width: 232px;
+      height: 270px;
+      margin-right: 10px;
+    }
+    .card a {
+      display: block;
+    }
+    .imageContainer {
+      width: 100%;
+      height: 100%;
+    }
+    .image {
+      
+    }
+    
+  </style>
+</head>
+<body>
+  <div class="discoveryWrapper">
+    <div class="carousel">
+      <div class="headerContainer">
+        <h2 class="header">New restaurants</h2>
+        <div class="buttonsContainer">
+          <button type="button">
+            <svg class="ic_m_caret_left_svg__rtlIcon" width="24" height="24" viewBox="0 0 24 24"><path fill="none" d="M0 0h24v24H0z"></path><path fill="currentColor" d="M15.477 3.977a.503.503 0 01.365.841l-6.68 7.159 6.679 7.159a.502.502 0 01.159.366.5.5 0 01-.888.315l-7-7.5a.498.498 0 010-.682l7-7.5a.496.496 0 01.365-.16"></path></svg>
+          </button>
+          <button type="button">
+            <svg class="ic_m_caret_right_svg__rtlIcon" width="24" height="24" viewBox="0 0 24 24"><path fill="none" d="M0 0h24v24H0z"></path><path fill="currentColor" d="M8.5 20a.5.5 0 01-.365-.841L14.815 12 8.136 4.841a.5.5 0 11.729-.681l7 7.5c.18.192.18.49 0 .682l-7 7.5a.494.494 0 01-.365.16"></path></svg>
+          </button>
+        </div>
+      </div>
+      <div class="trackContainer">
+        <div class="cardTrack">
+          <div class="card">
+            <a>
+              <div class="root">
+                <div class="imageContainer">
+                  <!-- <div class="offline"></div> -->
+                  <div class="blurHash">
+                  </div>
+                </div>
+                <div class="bottom">
+                  <div class="titleCard"></div>
+                    <div class="titleCardText">Restaurant 0</div>
+                </div>
+              </div>
+            </a>
+          </div>
+          <div class="card">Restaurant 1</div>
+          <div class="card">Restaurant 2</div>
+          <div class="card">Restaurant 3</div>
+          <div class="card">Restaurant 4</div>
+          <div class="card">Restaurant 5</div>
+          <!-- <div class="card">Restaurant 6</div>
+          <div class="card">Restaurant 7</div>
+          <div class="card">Restaurant 8</div>
+          <div class="card">Restaurant 9</div> -->
+        </div>
+      </div>
+    </div>
+  </div>
+  <script>
+    //마지막 카드의 위치와 trackContainer의 위치로 판단
+    //TODO: Unit Test - isFollowItemEmpty 함수에 대한 검증 필요
+    function isPrevItemEmpty() {
+      const trackContainer = document.querySelector(".trackContainer");
+      const firstCard = trackContainer.querySelector(".card:first-child");
+
+      const firtCardRight = firstCard.getBoundingClientRect().right;
+      const containerLeft = trackContainer.getBoundingClientRect().left;
+      if (firtCardRight < containerLeft) {
+        return false;
+      }
+      return true;
+    }
+
+    //마지막 카드의 위치와 trackContainer의 위치로 판단
+    //TODO: Unit Test - isFollowItemEmpty 함수에 대한 검증 필요
+    function isNextItemEmpty() {
+      const trackContainer = document.querySelector(".trackContainer");
+      const lastCard = trackContainer.querySelector(".card:last-child");
+
+      const lastCardLeft = lastCard.getBoundingClientRect().left;
+      const containerRight = trackContainer.getBoundingClientRect().right;
+      if (lastCardLeft > containerRight) {
+        return false;
+      }
+      return true;
+    }
+
+    const maxCardNumPerCarousel = 5;
+    const cardsLength = 6; //TODO: The number of cards
+    const cardSize = 232+10;
+    let firstIndexWithinCarousel = 0;
+    let lastIndexWithinCarousel = maxCardNumPerCarousel-1;
+    let translateX = 0;
+
+    console.log("[start] firstCardNum, lastCardNum:", 
+      firstIndexWithinCarousel, lastIndexWithinCarousel);
+
+    const prevButton = document.querySelector(".buttonsContainer>button:first-child");
+    const nextButton = document.querySelector(".buttonsContainer>button:last-child");
+    const cardTrack = document.querySelector(".cardTrack");
+
+    prevButton.addEventListener("click", () => {
+      if (--firstIndexWithinCarousel < 0) {
+        firstIndexWithinCarousel = cardsLength-1;
+      }
+      if (--lastIndexWithinCarousel < 0) {
+        lastIndexWithinCarousel = cardsLength-1;
+      }
+
+      //TODO: Unit 테스트 - firtCardNumWithinCarousel과 lastCardNumWithinCarousel 차이가 항상 maxCardNumPerCarousel인지 체크
+      console.log("[prevButton.click] firstCardNum, lastCardNum:", 
+      firstIndexWithinCarousel, lastIndexWithinCarousel);
+
+      if (isPrevItemEmpty()) {
+        console.log("맨 앞이다!");
+      } else { //끝이 아니면,
+        console.log("맨 앞이 아니야!");
+
+        translateX += cardSize;
+        cardTrack.style.transform = `translateX(${translateX}px)`;
+      }
+      
+      console.log(translateX);
+    });
+    nextButton.addEventListener("click", () => {
+      if (++firstIndexWithinCarousel >= cardsLength) {
+        firstIndexWithinCarousel = 0;
+      }
+      if (++lastIndexWithinCarousel >= cardsLength) {
+        lastIndexWithinCarousel = 0;
+      }
+      
+      //TODO: Unit 테스트 - firtCardNumWithinCarousel과 lastIndexWithinCarousel 차이가 항상 maxCardNumPerCarousel인지 체크
+      console.log("[nextButton.click] firstCardNum, lastCardNum:", 
+        firstIndexWithinCarousel, lastIndexWithinCarousel);
+
+      //끝이면 or 뒤에 아무것도 없다면, //TODO: Define a function
+      // if (translateX <= -cardSize * (cardsLength - maxCardNumPerCarousel)) {
+      if (isNextItemEmpty()) {
+        console.log("끝이다!");
+      } else { //끝이 아니면,
+        console.log("끝이 아니야!");
+        
+        translateX += -cardSize;
+        cardTrack.style.transform = `translateX(${translateX}px)`;
+      }
+
+      console.log(translateX);
+      // console.log(-cardSize * (cardsLength - maxCardNumPerCarousel));
+    });
+    cardTrack.addEventListener("transitionend", (e) => {
+      console.log("[transitionend] firstCardNum, lastCardNum:", 
+        firstIndexWithinCarousel, lastIndexWithinCarousel);
+
+      /*
+      //TODO: If the cardTrack reaches the end
+      const style = window.getComputedStyle(e.target)
+      const matrix = new DOMMatrixReadOnly(style.transform);
+      const translateX = matrix.m41;
+      console.log(translateX);
+
+      //TODO: Check if it is always expected value. Should think of 오차
+      // if (translateX <= -1210) { // -cardSize * (cardsLength - maxCardNumPerCarousel)
+      //마지막에 도착하면,
+      if (translateX <= -cardSize * (cardsLength - maxCardNumPerCarousel)) {
+        console.log("Move & Copy");
+
+        let firstCard = cardTrack.querySelector(".card:first-child");
+        console.log(firstCard.childNodes);
+        if (firstCard.childNodes.length === 0) {
+          console.log("empty!!");
+          // firstCard = firstCard.nextElementSibling();
+        }
+        // const emptyCard = firstCard.cloneNode(false);
+
+        // console.log(firstCard);
+        // cardTrack.insertBefore(emptyCard, firstCard);
+        cardTrack.appendChild(firstCard);
+      }
+      */
+    });
+
+  </script>
+</body>
+</html>
