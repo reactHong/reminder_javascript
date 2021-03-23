@@ -13,8 +13,9 @@ describe('App.ClickCounter', ()=> {
 
   describe('increase()', () => {
     it('카운터를 1 올린다', () => {
+      const initialValue = counter.getValue()
       counter.increase()
-      expect(counter.getValue()).toBe(1)
+      expect(counter.getValue()).toBe(initialValue + 1)
     })
   })
 })
