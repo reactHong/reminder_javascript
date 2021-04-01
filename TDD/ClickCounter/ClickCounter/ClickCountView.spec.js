@@ -14,9 +14,13 @@ describe('App.ClickCountView 모듈의', () => {
     expect(actual).toThrowError()
   })
 
-  // it('updateEl를 주입하지 않으면 에러를 던진다', () => {
+  it('updateEl를 주입하지 않으면 에러를 던진다', () => {
+    const clickCounter = App.ClickCounter()
+    const updateEl = null
 
-  // })
+    const actual = () => App.ClickCountView(clickCounter, updateEl)
+    expect(actual).toThrowError()
+  })
 
   describe('updateView()는', () => {
     it('ClickCounter의 getValue() 값을 출력한다', () => {
