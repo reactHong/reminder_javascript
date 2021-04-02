@@ -1,16 +1,17 @@
 describe('App.ClickCountView 모듈의', () => {
-  let updateEl, clickCounter, view
+  let updateEl, triggerEl, clickCounter, view
   beforeEach(() => {
     clickCounter = App.ClickCounter()
     updateEl = document.createElement('span')
-    view = App.ClickCountView(clickCounter, updateEl)
+    triggerEl = document.createElement('button')
+    view = App.ClickCountView(clickCounter, {updateEl, triggerEl})
   })
 
   it('clickCounter를 주입하지 않으면 에러를 던진다', () => {
     const clickCounter = null
     const updateEl = document.createElement('span')
 
-    const actual = () => App.ClickCountView(clickCounter, updateEl)
+    const actual = () => App.ClickCountView(clickCounter, {updateEl})
     expect(actual).toThrowError()
   })
 
@@ -18,7 +19,7 @@ describe('App.ClickCountView 모듈의', () => {
     const clickCounter = App.ClickCounter()
     const updateEl = null
 
-    const actual = () => App.ClickCountView(clickCounter, updateEl)
+    const actual = () => App.ClickCountView(clickCounter, {updateEl})
     expect(actual).toThrowError()
   })
 
@@ -42,5 +43,11 @@ describe('App.ClickCountView 모듈의', () => {
       view.increaseAndUpdateView()
       expect(view.updateView).toHaveBeenCalled()
     })
+  })
+
+  it('클릭 이벤트가 발생하면 increaseAndUpdateView를 실행한다', () => {
+    spyOn(view, 'increaseAndUpdateView')
+    triggerEl.click()
+    expect(view.increaseAndUpdateView).toHaveBeenCalled()
   })
 })

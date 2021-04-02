@@ -1,16 +1,22 @@
 var App = App || {}
 
-App.ClickCountView = (clickCounter, updateEl) => {
+App.ClickCountView = (clickCounter, options) => {
   if (!clickCounter) throw Error("Error: ClickCounter is null!")
-  if (!updateEl) throw Error("Error: updateEl is null!")
+  if (!options.updateEl) throw Error("Error: updateEl is null!")
 
-  return {
+  const view = {
     updateView() {
-      updateEl.innerHTML = clickCounter.getValue()
+      options.updateEl.innerHTML = clickCounter.getValue()
     },
     increaseAndUpdateView() {
       clickCounter.increase()
       this.updateView()
     }
   }
+
+  options.triggerEl.addEventListener('click', () => {
+    view.increaseAndUpdateView()
+  })
+
+  return view
 }
