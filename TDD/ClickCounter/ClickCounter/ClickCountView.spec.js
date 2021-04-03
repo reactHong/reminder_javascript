@@ -1,7 +1,8 @@
 describe('App.ClickCountView 모듈의', () => {
-  let updateEl, triggerEl, clickCounter, view
+  let updateEl, triggerEl, clickCounter, view, data
   beforeEach(() => {
-    clickCounter = App.ClickCounter()
+    data = { value: 0 }
+    clickCounter = App.ClickCounter(data)
     updateEl = document.createElement('span')
     triggerEl = document.createElement('button')
     view = App.ClickCountView(clickCounter, {updateEl, triggerEl})
@@ -16,7 +17,7 @@ describe('App.ClickCountView 모듈의', () => {
   })
 
   it('updateEl를 주입하지 않으면 에러를 던진다', () => {
-    const clickCounter = App.ClickCounter()
+    const clickCounter = App.ClickCounter(data)
     const updateEl = null
 
     const actual = () => App.ClickCountView(clickCounter, {updateEl})
