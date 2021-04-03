@@ -11,8 +11,12 @@ App.ClickCounter = (_data) => {
     getValue() {
       return data.value
     },
-    increase() {
+    count() {
       data.value++
+    },
+    setCountFn(fn) {
+      this.count = () => (data.value = fn(data.value))
+      return this
     }
   }
 }
