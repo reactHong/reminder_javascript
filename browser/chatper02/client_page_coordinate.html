@@ -1,0 +1,46 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Document</title>
+    <style>
+      body {
+        background-color: black;
+      }
+      div {
+        background-color: blanchedalmond;
+        width: 100px;
+        height: 100px;
+        margin-bottom: 5px;
+      }
+      .selected {
+        background-color: orange;
+      }
+    </style>
+  </head>
+  <body>
+    <div></div>
+    <div></div>
+    <div></div>
+    <div></div>
+    <div></div>
+    <div></div>
+    <div></div>
+    <div class="selected"></div>
+    <div></div>
+    <div></div>
+    <script>
+      {
+        const selectedBox = document.querySelector('.selected');
+        selectedBox.addEventListener('click', (e) => {
+          const rect = e.target.getBoundingClientRect();
+          console.log('rect:', rect);
+          console.log('(clientX, clientY):', e.clientX, e.clientY);
+          console.log('(pageX, pageY):', e.pageX, e.pageY);
+        });
+      }
+    </script>
+  </body>
+</html>
