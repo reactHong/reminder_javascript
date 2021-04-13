@@ -1,0 +1,52 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Size</title>
+  </head>
+  <body>
+    <div id="screen">window.screen: <span>0</span>, <span id="">0</span></div>
+    <div id="outer">window.outer: <span>0</span>, <span id="">0</span></div>
+    <div id="inner">window.inner: <span>0</span>, <span id="">0</span></div>
+    <div id="document">
+      documentElement: <span>0</span>, <span id="">0</span>
+    </div>
+
+    <script>
+      {
+        const update = () => {
+          outerWidth.innerHTML = window.outerWidth;
+          outerHeight.innerHTML = window.outerHeight;
+          innerWidth.innerHTML = window.innerWidth;
+          innerHeight.innerHTML = window.innerHeight;
+          documentWidth.innerHTML = document.documentElement.clientWidth;
+          documentHeight.innerHTML = document.documentElement.clientHeight;
+        };
+
+        const screenWidth = document.querySelector('#screen span:first-child');
+        const screenHeight = document.querySelector('#screen span:last-child');
+        const outerWidth = document.querySelector('#outer span:first-child');
+        const outerHeight = document.querySelector('#outer span:last-child');
+        const innerWidth = document.querySelector('#inner span:first-child');
+        const innerHeight = document.querySelector('#inner span:last-child');
+        const documentWidth = document.querySelector(
+          '#document span:first-child'
+        );
+        const documentHeight = document.querySelector(
+          '#document span:last-child'
+        );
+        screenWidth.innerHTML = window.screen.width;
+        screenHeight.innerHTML = window.screen.height;
+        update();
+
+        window.addEventListener('resize', () => {
+          update();
+        });
+
+        console.log(window);
+      }
+    </script>
+  </body>
+</html>
