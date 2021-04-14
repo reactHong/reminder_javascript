@@ -1,0 +1,90 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Document</title>
+    <style>
+      body {
+        background-color: black;
+      }
+      header {
+        position: fixed;
+        right: 10%;
+      }
+      body > div {
+        background-color: blanchedalmond;
+        width: 100px;
+        height: 100px;
+        margin-bottom: 5px;
+        display: flex;
+        justify-content: center;
+        align-items: center;
+      }
+      .selected {
+        background-color: orange;
+      }
+    </style>
+  </head>
+  <body>
+    <header>
+      <div class="buttons">
+        <button>Scroll 100px</button>
+        <button>Scroll to 100px</button>
+        <button>Scroll to the selected box</button>
+      </div>
+    </header>
+    <div>1</div>
+    <div>2</div>
+    <div>3</div>
+    <div>4</div>
+    <div>5</div>
+    <div class="selected">6</div>
+    <div>7</div>
+    <div>8</div>
+    <div>9</div>
+    <div>10</div>
+    <script>
+      {
+        const selectedBox = document.querySelector('.selected');
+        selectedBox.addEventListener('click', (e) => {
+          const rect = e.target.getBoundingClientRect();
+          console.log('rect:', rect);
+          console.log('(clientX, clientY):', e.clientX, e.clientY);
+          console.log('(pageX, pageY):', e.pageX, e.pageY);
+        });
+
+        const button1 = document.querySelector('.buttons>button:nth-child(1)');
+        const button2 = document.querySelector('.buttons>button:nth-child(2)');
+        const button3 = document.querySelector('.buttons>button:nth-child(3)');
+
+        button1.addEventListener('click', () => {
+          window.scrollBy({
+            top: 100,
+            behavior: 'smooth',
+          });
+        });
+        button2.addEventListener('click', () => {
+          window.scrollTo({
+            top: 100,
+            behavior: 'smooth',
+          });
+        });
+        button3.addEventListener('click', () => {
+          // const rect = selectedBox.getBoundingClientRect();
+          // const top = window.scrollY + rect.y;
+          // window.scrollTo({
+          //   top,
+          //   behavior: 'smooth',
+          // });
+
+          selectedBox.scrollIntoView({
+            behavior: 'smooth',
+            block: 'center',
+          });
+        });
+      }
+    </script>
+  </body>
+</html>
