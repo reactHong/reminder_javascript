@@ -1,0 +1,37 @@
+body {
+  margin: 0;
+  padding: 0;
+  background-color: black;
+  width: 100vw;
+  height: 100vh;
+  position: relative;
+}
+
+.horzLine {
+  background-color: white;
+  width: 100vw;
+  height: 1px;
+  position: absolute;
+  top: 50vh;
+}
+
+.vertLine {
+  background-color: white;
+  width: 1px;
+  height: 100vh;
+  position: absolute;
+  left: 50vw;
+}
+
+.target {
+  position: absolute;
+  /* left: 50vw; */
+  /* top: 50vh; */
+}
+
+.coordinate {
+  color: white;
+  text-align: center;
+  font-size: large;
+  /* position: absolute; */
+}
