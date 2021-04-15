@@ -8,6 +8,7 @@
     body {
       margin: 0;
       padding: 0;
+      /* overflow: hidden; */
     }
     .discoveryWrapper {
       max-width: 1200px;
@@ -29,21 +30,18 @@
 
     /* Carousel */
     .trackContainer {
-      background-color: yellowgreen;
+      background-color: red;
     }
     .cardTrack {
       display: flex;
       flex-direction: row;
-      transition: transform 0.5s;
     }
     /* Card */
-    .card, .empty {
-      background-color: red;
-      /* TODO: It should be changed by JS */
-      width: 232px; 
-      min-width: 232px;
-      height: 270px;
-      margin-right: 10px;
+    .card {
+      background-color: yellowgreen;
+    }
+    .emptyCard {
+      background-color: blue;
     }
     .card a {
       display: block;
@@ -52,10 +50,6 @@
       width: 100%;
       height: 100%;
     }
-    .image {
-      
-    }
-    
   </style>
 </head>
 <body>
@@ -63,6 +57,7 @@
     <div class="carousel">
       <div class="headerContainer">
         <h2 class="header">New restaurants</h2>
+        <button id="testButton">Test</button>
         <div class="buttonsContainer">
           <button type="button">
             <svg class="ic_m_caret_left_svg__rtlIcon" width="24" height="24" viewBox="0 0 24 24"><path fill="none" d="M0 0h24v24H0z"></path><path fill="currentColor" d="M15.477 3.977a.503.503 0 01.365.841l-6.68 7.159 6.679 7.159a.502.502 0 01.159.366.5.5 0 01-.888.315l-7-7.5a.498.498 0 010-.682l7-7.5a.496.496 0 01.365-.16"></path></svg>
@@ -74,21 +69,7 @@
       </div>
       <div class="trackContainer">
         <div class="cardTrack">
-          <div class="card">
-            <a>
-              <div class="root">
-                <div class="imageContainer">
-                  <!-- <div class="offline"></div> -->
-                  <div class="blurHash">
-                  </div>
-                </div>
-                <div class="bottom">
-                  <div class="titleCard"></div>
-                    <div class="titleCardText">Restaurant 0</div>
-                </div>
-              </div>
-            </a>
-          </div>
+          <div class="card">Restaurant 0</div>
           <div class="card">Restaurant 1</div>
           <div class="card">Restaurant 2</div>
           <div class="card">Restaurant 3</div>
@@ -105,125 +86,203 @@
   <script>
     //마지막 카드의 위치와 trackContainer의 위치로 판단
     //TODO: Unit Test - isFollowItemEmpty 함수에 대한 검증 필요
-    function isPrevItemEmpty() {
-      const trackContainer = document.querySelector(".trackContainer");
-      const firstCard = trackContainer.querySelector(".card:first-child");
-
-      const firtCardRight = firstCard.getBoundingClientRect().right;
-      const containerLeft = trackContainer.getBoundingClientRect().left;
-      if (firtCardRight < containerLeft) {
-        return false;
+    function isPrevItemEmpty(first) {
+      if (first === 0) {
+        return true;
       }
-      return true;
+      return false;
     }
 
     //마지막 카드의 위치와 trackContainer의 위치로 판단
     //TODO: Unit Test - isFollowItemEmpty 함수에 대한 검증 필요
-    function isNextItemEmpty() {
-      const trackContainer = document.querySelector(".trackContainer");
-      const lastCard = trackContainer.querySelector(".card:last-child");
-
-      const lastCardLeft = lastCard.getBoundingClientRect().left;
-      const containerRight = trackContainer.getBoundingClientRect().right;
-      if (lastCardLeft > containerRight) {
-        return false;
+    function isNextItemEmpty(cardsLength, last) {      
+      if (last >= cardsLength-1) {
+        return true;
       }
-      return true;
+      return false;
     }
 
-    const maxCardNumPerCarousel = 5;
-    const cardsLength = 6; //TODO: The number of cards
-    const cardSize = 232+10;
-    let firstIndexWithinCarousel = 0;
-    let lastIndexWithinCarousel = maxCardNumPerCarousel-1;
-    let translateX = 0;
+    function getElementTranslateX(element) {
+      const style = window.getComputedStyle(element);
+      const matrix = new DOMMatrixReadOnly(style.transform);
+      const translateX = matrix.m41;
+      return translateX;
+    }
 
-    console.log("[start] firstCardNum, lastCardNum:", 
-      firstIndexWithinCarousel, lastIndexWithinCarousel);
+    function resetCardInfo(maxCarouselCardNum) {
+      const carouselWidth = document.querySelector(".trackContainer").clientWidth;
+      const cardGap = 10;
+      const hvRatio = 9 / 16;
+      const cardWidth = (carouselWidth - (cardGap * (maxCarouselCardNum-1))) / maxCarouselCardNum;  //232+10
+      const cardHeight = cardWidth * hvRatio;
+      
+      cards.forEach(card => {
+        card.style.width = `${cardWidth}px`;
+        card.style.minWidth = `${cardWidth}px`;
+        card.style.height = `${cardHeight}px`;
+        card.style.marginRight = `${cardGap}px`;
+      });
 
+      return {
+        width: cardWidth,
+        height: cardHeight,
+        gap: cardGap,
+      };
+    }
+
+    const cards = document.querySelectorAll(".card");
     const prevButton = document.querySelector(".buttonsContainer>button:first-child");
     const nextButton = document.querySelector(".buttonsContainer>button:last-child");
+    
     const cardTrack = document.querySelector(".cardTrack");
 
+    const animationDuration = 0.3;
+    const maxCarouselCardNum = 5;
+    const virtualCardTrack = Array.from({length: cards.length}, (v,i) => i); //TODO: It could be card's id
+    const carouselRange = { //끝인지 아닌지를 판별하기 위한 용도
+      first: 0,
+      last: maxCarouselCardNum-1,
+    };
+    const cardInfo = resetCardInfo(maxCarouselCardNum);
+    
+    let translateXUnit = cardInfo.width + cardInfo.gap;  //TODO: element.clientWidth로도 사이즈를 가져올 수 있다.
+    let translateX = 0;
+    let isPrevButtonClicked = false;
+    let isNextButtonClicked = false;
+
+    console.log("[start] translateXUnit:", translateXUnit);
+    console.log("[start] virtualCardTrack:", virtualCardTrack)
+    console.log("[start] carouselRange:", carouselRange) ;
+
+    window.addEventListener("resize", () => {
+      const cardInfo = resetCardInfo(maxCarouselCardNum);
+      translateXUnit = cardInfo.width + cardInfo.gap;  //TODO: element.clientWidth로도 사이즈를 가져올 수 있다.
+    });
+
     prevButton.addEventListener("click", () => {
-      if (--firstIndexWithinCarousel < 0) {
-        firstIndexWithinCarousel = cardsLength-1;
+      console.log("");
+      if (isNextButtonClicked) {
+        console.log("역방향 버튼은 무시!!!");
+        return;
       }
-      if (--lastIndexWithinCarousel < 0) {
-        lastIndexWithinCarousel = cardsLength-1;
-      }
-
-      //TODO: Unit 테스트 - firtCardNumWithinCarousel과 lastCardNumWithinCarousel 차이가 항상 maxCardNumPerCarousel인지 체크
-      console.log("[prevButton.click] firstCardNum, lastCardNum:", 
-      firstIndexWithinCarousel, lastIndexWithinCarousel);
-
-      if (isPrevItemEmpty()) {
+      
+      //TODO: Unit 테스트 - firtCardNumWithinCarousel과 lastCardNumWithinCarousel 차이가 항상 maxCarouselCardNum 체크
+      if (isPrevItemEmpty(carouselRange.first)) {
         console.log("맨 앞이다!");
+
+        //TODO: 재배치
+        virtualCardTrack.unshift(virtualCardTrack.pop());
+        
+        const cards = document.querySelectorAll(".card");
+        const firstCard = cards[0];
+        const lastCard = cards[cards.length-1];
+        // console.log(lastCard);
+        const emptyCard = lastCard.cloneNode(false);
+        emptyCard.className = "emptyCard";
+
+        //TODO: 전체를 앞으로 이동 -> 앞에 카드를 붙임 -> 애니메이션 재개
+        cardTrack.insertBefore(lastCard, firstCard);
+        cardTrack.appendChild(emptyCard); 
+        
+        //TODO: 함수로 빼내기? - moveForwardWithNoAnimation()
+        const currentTranslateX = getElementTranslateX(cardTrack);
+        console.log("currentTranslateX:", currentTranslateX);
+        console.log("이동해야하는 값: ", currentTranslateX - translateXUnit);
+
+        cardTrack.style.transform = `translate3d(${currentTranslateX - translateXUnit}px, 0px, 0px)`;
+        cardTrack.style.transition = "none";
+
+        setTimeout(() => {
+          //TODO: 함수로 빼내기? - moveForwardWithNoAnimation()
+          console.log("다시 애니메이션 시작!!!");
+
+          translateX = 0;
+          cardTrack.style.transform = `translate3d(${translateX}px, 0px, 0px)`;
+          cardTrack.style.transition = `transform ${animationDuration}s`;  
+        }, 50);
       } else { //끝이 아니면,
         console.log("맨 앞이 아니야!");
+        
+        translateX += translateXUnit;
 
-        translateX += cardSize;
-        cardTrack.style.transform = `translateX(${translateX}px)`;
+        cardTrack.style.transform = `translate3d(${translateX}px, 0px, 0px)`;
+        cardTrack.style.transition = `transform ${animationDuration}s`;
+
+        carouselRange.first--;
+        carouselRange.last--;
       }
-      
+      console.log("[prevButton.click] virtualCardTrack:", virtualCardTrack);
+      console.log("[prevButton.click] carouselRange:", carouselRange);
       console.log(translateX);
-    });
-    nextButton.addEventListener("click", () => {
-      if (++firstIndexWithinCarousel >= cardsLength) {
-        firstIndexWithinCarousel = 0;
-      }
-      if (++lastIndexWithinCarousel >= cardsLength) {
-        lastIndexWithinCarousel = 0;
-      }
-      
-      //TODO: Unit 테스트 - firtCardNumWithinCarousel과 lastIndexWithinCarousel 차이가 항상 maxCardNumPerCarousel인지 체크
-      console.log("[nextButton.click] firstCardNum, lastCardNum:", 
-        firstIndexWithinCarousel, lastIndexWithinCarousel);
 
+      isPrevButtonClicked = true;
+    });
+
+    nextButton.addEventListener("click", () => {
+      console.log("");
+      if (isPrevButtonClicked) {
+        console.log("역방향 버튼은 무시!!!");
+        return;
+      }
+      //TODO: Unit 테스트 - firtCardNumWithinCarousel과 lastIndexWithinCarousel 차이가 항상 maxCarouselCardNum인지 체크
+      
       //끝이면 or 뒤에 아무것도 없다면, //TODO: Define a function
-      // if (translateX <= -cardSize * (cardsLength - maxCardNumPerCarousel)) {
-      if (isNextItemEmpty()) {
+      if (isNextItemEmpty(virtualCardTrack.length, carouselRange.last)) {
         console.log("끝이다!");
+
+        //TODO: 재배치
+        virtualCardTrack.push(virtualCardTrack.shift());
+
+        const firstCard = cardTrack.querySelector(".card");
+        const emptyCard = firstCard.cloneNode(false);
+        emptyCard.className = "emptyCard";
+
+        cardTrack.insertBefore(emptyCard, firstCard);
+        cardTrack.appendChild(firstCard);
+
       } else { //끝이 아니면,
         console.log("끝이 아니야!");
         
-        translateX += -cardSize;
-        cardTrack.style.transform = `translateX(${translateX}px)`;
+        carouselRange.first++;
+        carouselRange.last++;
       }
+      console.log("[nextButton.click] virtualCardTrack:", virtualCardTrack);
+      console.log("[nextButton.click] carouselRange:", carouselRange);
+
+      translateX += -translateXUnit;
+      cardTrack.style.transform = `translate3d(${translateX}px, 0px, 0px)`;
+      cardTrack.style.transition = `transform ${animationDuration}s`;
 
       console.log(translateX);
-      // console.log(-cardSize * (cardsLength - maxCardNumPerCarousel));
+      
+      isNextButtonClicked = true;
     });
+    
     cardTrack.addEventListener("transitionend", (e) => {
-      console.log("[transitionend] firstCardNum, lastCardNum:", 
-        firstIndexWithinCarousel, lastIndexWithinCarousel);
+      console.log("[transitionend] carouselRange:", carouselRange);
 
-      /*
-      //TODO: If the cardTrack reaches the end
-      const style = window.getComputedStyle(e.target)
-      const matrix = new DOMMatrixReadOnly(style.transform);
-      const translateX = matrix.m41;
-      console.log(translateX);
-
-      //TODO: Check if it is always expected value. Should think of 오차
-      // if (translateX <= -1210) { // -cardSize * (cardsLength - maxCardNumPerCarousel)
-      //마지막에 도착하면,
-      if (translateX <= -cardSize * (cardsLength - maxCardNumPerCarousel)) {
-        console.log("Move & Copy");
-
-        let firstCard = cardTrack.querySelector(".card:first-child");
-        console.log(firstCard.childNodes);
-        if (firstCard.childNodes.length === 0) {
-          console.log("empty!!");
-          // firstCard = firstCard.nextElementSibling();
+      //빈 셀 지우기
+      const emptyCards = cardTrack.querySelectorAll(".emptyCard");
+      console.log("[transitionend] emptyCards.length:", emptyCards.length);
+      if (emptyCards.length > 0) {
+        emptyCards.forEach(empty => cardTrack.removeChild(empty));
+        
+        if (isNextButtonClicked) {
+          translateX += translateXUnit * emptyCards.length;
+          cardTrack.style.transform = `translate3d(${translateX}px, 0px, 0px)`;
+          cardTrack.style.transition = `none`;
+          console.log("[transitionend] translateX:", translateX);
         }
-        // const emptyCard = firstCard.cloneNode(false);
-
-        // console.log(firstCard);
-        // cardTrack.insertBefore(emptyCard, firstCard);
-        cardTrack.appendChild(firstCard);
       }
-      */
+
+      isPrevButtonClicked = false;
+      isNextButtonClicked = false;
+    });
+
+    const testButton = document.querySelector("#testButton");
+    testButton.addEventListener("click", () => {
+      const translateX = getElementTranslateX(cardTrack);
+      console.log(translateX);
     });
 
   </script>
