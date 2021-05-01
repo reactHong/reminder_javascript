@@ -1,0 +1,63 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Document</title>
+  </head>
+  <body>
+    <script>
+      document.cookie =
+        'name=Kyle; expires=' + new Date(2021, 5, 1).toUTCString();
+
+      localStorage.setItem('test', 'text');
+      localStorage.setItem('number', 333);
+      localStorage.setItem('boolean', true);
+      localStorage.setItem('null', null);
+      localStorage.setItem('undefined', undefined);
+      localStorage.setItem('object', { a: 3, b: '1234' });
+      localStorage.setItem('strigify', JSON.stringify({ a: 3, b: '1234' }));
+
+      const localData1 = localStorage.getItem('test');
+      const localData2 = localStorage.getItem('number');
+      const localData3 = localStorage.getItem('boolean');
+      const localData4 = localStorage.getItem('null');
+      const localData5 = localStorage.getItem('undefined');
+      const localData6 = localStorage.getItem('object');
+      const localData7 = localStorage.getItem('strigify');
+
+      console.log(typeof localData1, localData1);
+      console.log(typeof localData2, localData2);
+      console.log(typeof localData3, localData3);
+      console.log(typeof localData4, localData4);
+      console.log(typeof localData5, localData5);
+      console.log(typeof localData6, localData6);
+      console.log(typeof localData7, localData7);
+
+      sessionStorage.setItem('test', 'text');
+      sessionStorage.setItem('number', 333);
+      sessionStorage.setItem('boolean', true);
+      sessionStorage.setItem('null', null);
+      sessionStorage.setItem('undefined', undefined);
+      sessionStorage.setItem('object', { a: 3, b: '1234' });
+      sessionStorage.setItem('strigify', JSON.stringify({ a: 3, b: '1234' }));
+
+      const sessionData1 = sessionStorage.getItem('test');
+      const sessionData2 = sessionStorage.getItem('number');
+      const sessionData3 = sessionStorage.getItem('boolean');
+      const sessionData4 = sessionStorage.getItem('null');
+      const sessionData5 = sessionStorage.getItem('undefined');
+      const sessionData6 = sessionStorage.getItem('object');
+      const sessionData7 = sessionStorage.getItem('strigify');
+
+      console.log(typeof sessionData1, sessionData1);
+      console.log(typeof sessionData2, sessionData2);
+      console.log(typeof sessionData3, sessionData3);
+      console.log(typeof sessionData4, sessionData4);
+      console.log(typeof sessionData5, sessionData5);
+      console.log(typeof sessionData6, sessionData6);
+      console.log(typeof sessionData7, sessionData7);
+    </script>
+  </body>
+</html>
