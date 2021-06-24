@@ -1,3 +1,5 @@
+// Reference: https://www.youtube.com/watch?v=7CDUeZh5OCE&list=PLyuRouwmQCjlLW9NjqoBbf9eVaFX4F9UZ&index=10
+
 //var hoisting vs let hoisting
 //WHAT will be the output from this code and why?
 
