@@ -11,6 +11,7 @@ addBtn.addEventListener('click', () => {
   const delBtn = document.createElement('button');
   const textNode = document.createTextNode(newValue);
 
+  delBtn.className = 'delete';
   delBtn.innerHTML = 'Del';
   newItem.appendChild(textNode);
   newItem.appendChild(delBtn);
@@ -19,7 +20,13 @@ addBtn.addEventListener('click', () => {
 
   input.value = '';
 
-  delBtn.addEventListener('click', (e) => {
-    list.removeChild(newItem);
-  });
+  // delBtn.addEventListener('click', (e) => {
+  //   list.removeChild(newItem);
+  // });
+});
+
+list.addEventListener('click', (e) => {
+  if (e.target.className === 'delete') {
+    list.removeChild(e.target.parentNode);
+  }
 });
