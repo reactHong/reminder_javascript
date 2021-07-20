@@ -96,6 +96,12 @@ main {
 .bug,
 .carrot {
   position: absolute;
+  transition: all 0.1s ease-in-out;
+}
+
+.bug:hover,
+.carrot:hover {
+  transform: scale(1.2);
 }
 
 .bug1 {
