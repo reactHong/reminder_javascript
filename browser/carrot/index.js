@@ -102,9 +102,6 @@ class Game {
   }
 
   setCarrots() {
-    console.log(this.divUnitArea.offsetWidth);
-    console.log(this.divUnitArea.offsetHeight);
-
     const width = this.divUnitArea.offsetWidth;
     const height = this.divUnitArea.offsetHeight;
 
@@ -148,7 +145,7 @@ class Game {
   }
 }
 
-window.addEventListener('DOMContentLoaded', () => {
+window.addEventListener('load', () => {
   const game = new Game();
   game.start();
 });
