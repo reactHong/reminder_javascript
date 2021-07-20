@@ -1,0 +1,118 @@
+body {
+  background-color: black;
+  margin: 0;
+}
+
+main {
+  width: 1000px;
+  height: 600px;
+  margin: 20px auto;
+  background-image: url(./img/background.png);
+  background-size: cover;
+  border-radius: 50px;
+}
+
+.game-top {
+  height: 330px;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  /* text-align: center; */
+  font-size: 3em;
+  padding: 10px;
+}
+
+.game-bottom {
+  height: 250px;
+  /* display: flex;
+  flex-direction: column;
+  align-items: center; */
+}
+
+.game-play,
+.game-stop,
+.game-replay {
+  width: 70px;
+  height: 70px;
+}
+
+.game-play > i,
+.game-stop > i {
+}
+
+.game-time {
+  background-color: white;
+  border: 5px solid black;
+  width: 200px;
+  border-radius: 10px;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+
+.game-carrots {
+  background-color: orange;
+  width: 70px;
+  height: 70px;
+  border: 3px solid black;
+  border-radius: 50%;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+
+.game-unitarea {
+  position: relative;
+  height: 100%;
+}
+
+.game-over {
+  background-color: rgba(50, 50, 50, 0.5);
+  position: relative;
+  top: -75%;
+  width: 50%;
+  height: 50%;
+  margin: 0 auto;
+  padding: 10px;
+  border-radius: 20px;
+
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+}
+
+.hide {
+  display: none;
+}
+
+.game-replay {
+}
+
+.game-endtext {
+  color: white;
+  font-size: 3em;
+}
+
+.bug,
+.carrot {
+  position: absolute;
+}
+
+.bug1 {
+  top: 10px;
+  left: 10px;
+}
+
+.carrot1 {
+  top: 150px;
+  left: 110px;
+}
+
+.bug2 {
+  top: 10px;
+  left: 300px;
+}
+.carrot2 {
+  top: 10px;
+  left: 400px;
+}
