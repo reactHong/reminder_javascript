@@ -1,17 +1,25 @@
 'use strict';
 
 import Popup from './popup.js';
+import Field from './field.js';
 
 class Game {
   static TIMELIMIT = 10;
   static CARROTS = 10;
   static BUGS = 20;
-  static CARROT_SIZE = 80;
-  static BUG_SIZE = 50;
 
   constructor() {
     this.popup = new Popup();
     this.popup.setClickListener(() => this.replay());
+
+    this.field = new Field(Game.CARROTS, Game.BUGS);
+    this.field.setListeners(
+      () => this.timer !== null,
+      (item) => {
+        if (item === 'carrot') this.clickCarrot();
+        else if (item === 'bug') this.clickBug();
+      }
+    );
 
     this.timer = null;
     this.timeLimit = Game.TIMELIMIT;
@@ -19,13 +27,13 @@ class Game {
 
     this.divTime = document.querySelector('.game-time');
     this.divCarrots = document.querySelector('.game-carrots');
-    this.divUnitArea = document.querySelector('.game-unitarea');
-    this.divUnitArea.addEventListener('click', (e) => {
-      if (!this.timer) return;
+    // this.divField = document.querySelector('.game-field');
+    // this.divField.addEventListener('click', (e) => {
+    //   if (!this.timer) return;
 
-      if (e.target.matches('.carrot')) this.clickCarrot(e.target);
-      else if (e.target.matches('.bug')) this.clickBug();
-    });
+    //   if (e.target.matches('.carrot')) this.clickCarrot(e.target);
+    //   else if (e.target.matches('.bug')) this.clickBug();
+    // });
     // this.divGameover = document.querySelector('.game-over');
 
     this.playBtn = document.querySelector('.game-play');
@@ -50,11 +58,7 @@ class Game {
     this.timeLimit = Game.TIMELIMIT;
     this.carrots = Game.CARROTS;
 
-    const imgs = this.divUnitArea.querySelectorAll('img');
-    imgs.forEach((img) => img.remove());
-
-    this.addItems('carrot', Game.CARROTS, Game.CARROT_SIZE, 'img/carrot.png');
-    this.addItems('bug', Game.BUGS, Game.BUG_SIZE, 'img/bug.png');
+    this.field.init();
   }
 
   play() {
@@ -100,6 +104,7 @@ class Game {
     this.stopTimer();
     this.hideByVisibility(this.playBtn);
     this.popup.showWithText('YOU WON');
+    this.bgSound.pause();
     this.winSound.play();
   }
 
@@ -108,37 +113,16 @@ class Game {
     this.divCarrots.innerHTML = this.carrots;
   }
 
-  clickCarrot(carrot) {
+  clickCarrot() {
     this.carrotSound.play();
-
-    carrot.remove();
-
     this.carrots--;
+    this.carrots === 0 ? this.win() : '';
     this.invalidate();
-
-    if (this.carrots === 0) this.win();
   }
 
   clickBug() {
     this.bugSound.play();
     this.gameover();
-  }
-
-  addItems(className, itemCount, itemSize, imgSrc) {
-    const width = this.divUnitArea.offsetWidth;
-    const height = this.divUnitArea.offsetHeight;
-
-    for (let i = 0; i < itemCount; i++) {
-      const randomX = Math.random() * (width - itemSize);
-      const randomY = Math.random() * (height - itemSize);
-      const style = `left:${randomX}px;top:${randomY}px;`;
-
-      const item = document.createElement('img');
-      item.className = className;
-      item.setAttribute('src', imgSrc);
-      item.setAttribute('style', style);
-      this.divUnitArea.appendChild(item);
-    }
   }
 
   show(target) {

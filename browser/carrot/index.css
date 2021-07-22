@@ -90,7 +90,7 @@ main {
   cursor: auto;
 }
 
-.game-unitarea {
+.game-field {
   position: relative;
   height: 100%;
 }
