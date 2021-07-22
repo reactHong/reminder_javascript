@@ -58,8 +58,8 @@ class Game {
     const imgs = this.divUnitArea.querySelectorAll('img');
     imgs.forEach((img) => img.remove());
 
-    this.setCarrots();
-    this.setBugs();
+    this.addItems('carrot', Game.CARROTS, Game.CARROT_SIZE, 'img/carrot.png');
+    this.addItems('bug', Game.BUGS, Game.BUG_SIZE, 'img/bug.png');
   }
 
   play() {
@@ -121,38 +121,6 @@ class Game {
     this.divCarrots.innerHTML = this.carrots;
   }
 
-  setCarrots() {
-    const width = this.divUnitArea.offsetWidth;
-    const height = this.divUnitArea.offsetHeight;
-
-    for (let i = 0; i < Game.CARROTS; i++) {
-      const randomX = Math.random() * (width - Game.CARROT_SIZE);
-      const randomY = Math.random() * (height - Game.CARROT_SIZE);
-      const style = `left:${randomX}px;top:${randomY}px;`;
-
-      const carrot = document.createElement('img');
-      carrot.className = 'carrot';
-      carrot.setAttribute('src', 'img/carrot.png');
-      carrot.setAttribute('style', style);
-      this.divUnitArea.appendChild(carrot);
-    }
-  }
-
-  setBugs() {
-    const width = this.divUnitArea.offsetWidth;
-    const height = this.divUnitArea.offsetHeight;
-
-    for (let i = 0; i < Game.BUGS; i++) {
-      const randomX = Math.random() * (width - Game.BUG_SIZE);
-      const randomY = Math.random() * (height - Game.BUG_SIZE);
-      const style = `left:${randomX}px;top:${randomY}px;`;
-
-      const bug = document.createElement('img');
-      bug.className = 'bug';
-      bug.setAttribute('src', 'img/bug.png');
-      bug.setAttribute('style', style);
-      this.divUnitArea.appendChild(bug);
-    }
   }
 
   clickCarrot(carrot) {
@@ -169,6 +137,23 @@ class Game {
   clickBug() {
     this.bugSound.play();
     this.gameover();
+  }
+
+  addItems(className, itemCount, itemSize, imgSrc) {
+    const width = this.divUnitArea.offsetWidth;
+    const height = this.divUnitArea.offsetHeight;
+
+    for (let i = 0; i < itemCount; i++) {
+      const randomX = Math.random() * (width - itemSize);
+      const randomY = Math.random() * (height - itemSize);
+      const style = `left:${randomX}px;top:${randomY}px;`;
+
+      const item = document.createElement('img');
+      item.className = className;
+      item.setAttribute('src', imgSrc);
+      item.setAttribute('style', style);
+      this.divUnitArea.appendChild(item);
+    }
   }
 }
 
