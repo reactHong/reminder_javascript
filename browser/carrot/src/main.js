@@ -2,6 +2,7 @@
 
 import Popup from './popup.js';
 import Field from './field.js';
+import * as sound from './sound.js';
 
 class Game {
   static TIMELIMIT = 10;
@@ -27,26 +28,9 @@ class Game {
 
     this.divTime = document.querySelector('.game-time');
     this.divCarrots = document.querySelector('.game-carrots');
-    // this.divField = document.querySelector('.game-field');
-    // this.divField.addEventListener('click', (e) => {
-    //   if (!this.timer) return;
-
-    //   if (e.target.matches('.carrot')) this.clickCarrot(e.target);
-    //   else if (e.target.matches('.bug')) this.clickBug();
-    // });
-    // this.divGameover = document.querySelector('.game-over');
 
     this.playBtn = document.querySelector('.game-play');
     this.playBtn.addEventListener('click', this.play.bind(this));
-
-    // this.replayBtn = document.querySelector('.game-replay');
-    // this.replayBtn.addEventListener('click', this.replay.bind(this));
-
-    this.alertSound = new Audio('./sound/alert.wav');
-    this.bgSound = new Audio('./sound/bg.mp3');
-    this.bugSound = new Audio('./sound/bug_pull.mp3');
-    this.carrotSound = new Audio('./sound/carrot_pull.mp3');
-    this.winSound = new Audio('./sound/game_win.mp3');
   }
 
   stopTimer() {
@@ -57,7 +41,6 @@ class Game {
   start() {
     this.timeLimit = Game.TIMELIMIT;
     this.carrots = Game.CARROTS;
-
     this.field.init();
   }
 
@@ -70,21 +53,20 @@ class Game {
         this.invalidate();
 
         if (this.timeLimit === 0) {
-          this.alertSound.play();
           this.gameover();
+          sound.playAlert();
         }
       }, 1000);
       this.showStopButton();
-      this.bgSound.currentTime = 0;
-      this.bgSound.play();
+      sound.playBackground();
     }
   }
 
   stop() {
     this.stopTimer();
-    this.popup.showWithText('Replay❓');
     this.hideByVisibility(this.playBtn);
-    this.bgSound.pause();
+    this.popup.showWithText('Replay❓');
+    sound.stopBackground();
   }
 
   replay() {
@@ -97,15 +79,15 @@ class Game {
     this.stopTimer();
     this.hideByVisibility(this.playBtn);
     this.popup.showWithText('YOU LOST');
-    this.bgSound.pause();
+    sound.stopBackground();
   }
 
   win() {
     this.stopTimer();
     this.hideByVisibility(this.playBtn);
     this.popup.showWithText('YOU WON');
-    this.bgSound.pause();
-    this.winSound.play();
+    sound.stopBackground();
+    sound.playWin();
   }
 
   invalidate() {
@@ -114,15 +96,15 @@ class Game {
   }
 
   clickCarrot() {
-    this.carrotSound.play();
     this.carrots--;
     this.carrots === 0 ? this.win() : '';
     this.invalidate();
+    sound.playCarrot();
   }
 
   clickBug() {
-    this.bugSound.play();
     this.gameover();
+    sound.playBug();
   }
 
   show(target) {
