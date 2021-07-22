@@ -17,8 +17,8 @@ class Game {
     this.divUnitArea.addEventListener('click', (e) => {
       if (!this.timer) return;
 
-      if (e.target.classList.contains('carrot')) this.clickCarrot(e.target);
-      else if (e.target.classList.contains('bug')) this.gameover();
+      if (e.target.matches('.carrot')) this.clickCarrot(e.target);
+      else if (e.target.matches('.bug')) this.gameover();
     });
     this.divGameover = document.querySelector('.game-over');
 
@@ -32,12 +32,12 @@ class Game {
 
   show(target) {
     target.removeAttribute('style');
-    if (target.classList.contains('hide')) target.classList.remove('hide');
+    if (target.matches('.hide')) target.classList.remove('hide');
   }
 
   hide(target, asOpacity) {
     if (asOpacity) target.setAttribute('style', 'opacity: 0;');
-    else if (!target.classList.contains('hide')) target.classList.add('hide');
+    else if (!target.matches('.hide')) target.classList.add('hide');
   }
 
   stopTimer() {
