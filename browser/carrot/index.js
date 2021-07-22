@@ -9,7 +9,6 @@ class Game {
     this.timer = null;
     this.timeLimit = Game.TIMELIMIT;
     this.carrots = Game.CARROTS;
-    this.result = null;
 
     this.divTime = document.querySelector('.game-time');
     this.divCarrots = document.querySelector('.game-carrots');
@@ -23,10 +22,8 @@ class Game {
     this.divGameover = document.querySelector('.game-over');
 
     this.playBtn = document.querySelector('.game-play');
-    this.stopBtn = document.querySelector('.game-stop');
     this.replayBtn = document.querySelector('.game-replay');
     this.playBtn.addEventListener('click', this.play.bind(this));
-    this.stopBtn.addEventListener('click', this.stop.bind(this));
     this.replayBtn.addEventListener('click', this.replay.bind(this));
 
     this.alertSound = new Audio('./sound/alert.wav');
@@ -34,16 +31,6 @@ class Game {
     this.bugSound = new Audio('./sound/bug_pull.mp3');
     this.carrotSound = new Audio('./sound/carrot_pull.mp3');
     this.winSound = new Audio('./sound/game_win.mp3');
-  }
-
-  show(target) {
-    target.removeAttribute('style');
-    if (target.matches('.hide')) target.classList.remove('hide');
-  }
-
-  hide(target, asVisibility) {
-    if (asVisibility) target.setAttribute('style', 'visibility: hidden;');
-    else if (!target.matches('.hide')) target.classList.add('hide');
   }
 
   stopTimer() {
@@ -63,28 +50,28 @@ class Game {
   }
 
   play() {
-    this.timer = setInterval(() => {
-      this.timeLimit--;
-      this.invalidate();
+    if (this.timer) {
+      this.stop();
+    } else {
+      this.timer = setInterval(() => {
+        this.timeLimit--;
+        this.invalidate();
 
-      if (this.timeLimit === 0) {
-        this.alertSound.play();
-        this.gameover();
-      }
-    }, 1000);
-    this.hide(this.playBtn);
-    this.show(this.stopBtn);
-
-    this.bgSound.currentTime = 0;
-    this.bgSound.play();
+        if (this.timeLimit === 0) {
+          this.alertSound.play();
+          this.gameover();
+        }
+      }, 1000);
+      this.showStopButton();
+      this.bgSound.currentTime = 0;
+      this.bgSound.play();
+    }
   }
 
   stop() {
     this.stopTimer();
-    this.hide(this.stopBtn, true);
-    this.hide(this.playBtn);
     this.showPopupWithText('Replay❓');
-
+    this.hideByVisibility(this.playBtn);
     this.bgSound.pause();
   }
 
@@ -97,30 +84,21 @@ class Game {
 
   gameover() {
     this.stopTimer();
-    this.hide(this.stopBtn, true);
-    this.hide(this.playBtn);
+    this.hideByVisibility(this.playBtn);
     this.showPopupWithText('YOU LOST');
-
     this.bgSound.pause();
   }
 
   win() {
     this.stopTimer();
-    this.hide(this.stopBtn, true);
-    this.hide(this.playBtn);
+    this.hideByVisibility(this.playBtn);
     this.showPopupWithText('YOU WON');
-
     this.winSound.play();
   }
 
   invalidate() {
     this.divTime.innerHTML = `0:${this.timeLimit}`;
     this.divCarrots.innerHTML = this.carrots;
-  }
-
-  showPopupWithText(text) {
-    this.show(this.divGameover);
-    this.divGameover.querySelector('.game-endtext').innerHTML = text;
   }
 
   clickCarrot(carrot) {
@@ -154,6 +132,36 @@ class Game {
       item.setAttribute('style', style);
       this.divUnitArea.appendChild(item);
     }
+  }
+
+  show(target) {
+    target.removeAttribute('style');
+    if (target.matches('.hide')) target.classList.remove('hide');
+  }
+
+  hide(target) {
+    if (!target.matches('.hide')) target.classList.add('hide');
+  }
+
+  hideByVisibility(target) {
+    target.setAttribute('style', 'visibility: hidden;');
+  }
+
+  showPopupWithText(text) {
+    this.show(this.divGameover);
+    this.divGameover.querySelector('.game-endtext').innerHTML = text;
+  }
+
+  showPlayButton() {
+    this.show(this.playBtn);
+    this.playBtn.querySelector('.fas').classList.remove('fa-stop');
+    this.playBtn.querySelector('.fas').classList.add('fa-play');
+  }
+
+  showStopButton() {
+    this.show(this.playBtn);
+    this.playBtn.querySelector('.fas').classList.remove('fa-play');
+    this.playBtn.querySelector('.fas').classList.add('fa-stop');
   }
 }
 
