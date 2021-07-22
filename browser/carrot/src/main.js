@@ -1,3 +1,7 @@
+'use strict';
+
+import Popup from './popup.js';
+
 class Game {
   static TIMELIMIT = 10;
   static CARROTS = 10;
@@ -6,6 +10,9 @@ class Game {
   static BUG_SIZE = 50;
 
   constructor() {
+    this.popup = new Popup();
+    this.popup.setClickListener(() => this.replay());
+
     this.timer = null;
     this.timeLimit = Game.TIMELIMIT;
     this.carrots = Game.CARROTS;
@@ -19,12 +26,13 @@ class Game {
       if (e.target.matches('.carrot')) this.clickCarrot(e.target);
       else if (e.target.matches('.bug')) this.clickBug();
     });
-    this.divGameover = document.querySelector('.game-over');
+    // this.divGameover = document.querySelector('.game-over');
 
     this.playBtn = document.querySelector('.game-play');
-    this.replayBtn = document.querySelector('.game-replay');
     this.playBtn.addEventListener('click', this.play.bind(this));
-    this.replayBtn.addEventListener('click', this.replay.bind(this));
+
+    // this.replayBtn = document.querySelector('.game-replay');
+    // this.replayBtn.addEventListener('click', this.replay.bind(this));
 
     this.alertSound = new Audio('./sound/alert.wav');
     this.bgSound = new Audio('./sound/bg.mp3');
@@ -70,13 +78,12 @@ class Game {
 
   stop() {
     this.stopTimer();
-    this.showPopupWithText('Replay❓');
+    this.popup.showWithText('Replay❓');
     this.hideByVisibility(this.playBtn);
     this.bgSound.pause();
   }
 
   replay() {
-    this.hide(this.divGameover);
     this.start();
     this.invalidate();
     this.play();
@@ -85,14 +92,14 @@ class Game {
   gameover() {
     this.stopTimer();
     this.hideByVisibility(this.playBtn);
-    this.showPopupWithText('YOU LOST');
+    this.popup.showWithText('YOU LOST');
     this.bgSound.pause();
   }
 
   win() {
     this.stopTimer();
     this.hideByVisibility(this.playBtn);
-    this.showPopupWithText('YOU WON');
+    this.popup.showWithText('YOU WON');
     this.winSound.play();
   }
 
@@ -145,11 +152,6 @@ class Game {
 
   hideByVisibility(target) {
     target.setAttribute('style', 'visibility: hidden;');
-  }
-
-  showPopupWithText(text) {
-    this.show(this.divGameover);
-    this.divGameover.querySelector('.game-endtext').innerHTML = text;
   }
 
   showPlayButton() {

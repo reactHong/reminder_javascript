@@ -95,7 +95,7 @@ main {
   height: 100%;
 }
 
-.game-over {
+.game-popup {
   background-color: rgba(50, 50, 50, 0.5);
   position: relative;
   top: -75%;
