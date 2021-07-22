@@ -2,6 +2,8 @@ class Game {
   static TIMELIMIT = 10;
   static CARROTS = 10;
   static BUGS = 20;
+  static CARROT_SIZE = 80;
+  static BUG_SIZE = 50;
 
   constructor() {
     this.timer = null;
@@ -106,8 +108,8 @@ class Game {
     const height = this.divUnitArea.offsetHeight;
 
     for (let i = 0; i < Game.CARROTS; i++) {
-      const randomX = Math.random() * (width - 80);
-      const randomY = Math.random() * (height - 80);
+      const randomX = Math.random() * (width - Game.CARROT_SIZE);
+      const randomY = Math.random() * (height - Game.CARROT_SIZE);
       const style = `left:${randomX}px;top:${randomY}px;`;
 
       const carrot = document.createElement('img');
@@ -123,8 +125,8 @@ class Game {
     const height = this.divUnitArea.offsetHeight;
 
     for (let i = 0; i < Game.BUGS; i++) {
-      const randomX = Math.random() * (width - 50);
-      const randomY = Math.random() * (height - 50);
+      const randomX = Math.random() * (width - Game.BUG_SIZE);
+      const randomY = Math.random() * (height - Game.BUG_SIZE);
       const style = `left:${randomX}px;top:${randomY}px;`;
 
       const bug = document.createElement('img');
