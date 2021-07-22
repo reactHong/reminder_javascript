@@ -41,8 +41,8 @@ class Game {
     if (target.matches('.hide')) target.classList.remove('hide');
   }
 
-  hide(target, asOpacity) {
-    if (asOpacity) target.setAttribute('style', 'opacity: 0;');
+  hide(target, asVisibility) {
+    if (asVisibility) target.setAttribute('style', 'visibility: hidden;');
     else if (!target.matches('.hide')) target.classList.add('hide');
   }
 
