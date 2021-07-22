@@ -18,7 +18,7 @@ class Game {
       if (!this.timer) return;
 
       if (e.target.matches('.carrot')) this.clickCarrot(e.target);
-      else if (e.target.matches('.bug')) this.gameover();
+      else if (e.target.matches('.bug')) this.clickBug();
     });
     this.divGameover = document.querySelector('.game-over');
 
@@ -28,6 +28,12 @@ class Game {
     this.playBtn.addEventListener('click', this.play.bind(this));
     this.stopBtn.addEventListener('click', this.stop.bind(this));
     this.replayBtn.addEventListener('click', this.replay.bind(this));
+
+    this.alertSound = new Audio('./sound/alert.wav');
+    this.bgSound = new Audio('./sound/bg.mp3');
+    this.bugSound = new Audio('./sound/bug_pull.mp3');
+    this.carrotSound = new Audio('./sound/carrot_pull.mp3');
+    this.winSound = new Audio('./sound/game_win.mp3');
   }
 
   show(target) {
@@ -61,10 +67,16 @@ class Game {
       this.timeLimit--;
       this.invalidate();
 
-      if (this.timeLimit === 0) this.gameover();
+      if (this.timeLimit === 0) {
+        this.alertSound.play();
+        this.gameover();
+      }
     }, 1000);
     this.hide(this.playBtn);
     this.show(this.stopBtn);
+
+    this.bgSound.currentTime = 0;
+    this.bgSound.play();
   }
 
   stop() {
@@ -73,6 +85,8 @@ class Game {
     this.hide(this.playBtn);
     this.show(this.divGameover);
     this.divGameover.querySelector('.game-endtext').innerHTML = 'Replay?';
+
+    this.bgSound.pause();
   }
 
   replay() {
@@ -88,6 +102,8 @@ class Game {
     this.hide(this.playBtn);
     this.show(this.divGameover);
     this.divGameover.querySelector('.game-endtext').innerHTML = 'YOU LOST';
+
+    this.bgSound.pause();
   }
 
   win() {
@@ -96,6 +112,8 @@ class Game {
     this.hide(this.playBtn);
     this.show(this.divGameover);
     this.divGameover.querySelector('.game-endtext').innerHTML = 'YOU WON';
+
+    this.winSound.play();
   }
 
   invalidate() {
@@ -138,12 +156,19 @@ class Game {
   }
 
   clickCarrot(carrot) {
+    this.carrotSound.play();
+
     carrot.remove();
 
     this.carrots--;
     this.invalidate();
 
     if (this.carrots === 0) this.win();
+  }
+
+  clickBug() {
+    this.bugSound.play();
+    this.gameover();
   }
 }
 
