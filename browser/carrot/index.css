@@ -31,13 +31,31 @@ main {
 
 .game-play,
 .game-stop,
+.game-time,
+.game-carrots {
+  margin-bottom: 10px;
+}
+
+.game-play,
+.game-stop,
 .game-replay {
+  background-color: moccasin;
   width: 70px;
   height: 70px;
+  border-radius: 10px;
+  transition: all 0.1s ease-in-out;
 }
 
 .game-play > i,
-.game-stop > i {
+.game-stop > i,
+.game-replay > i {
+  transform: scale(2);
+}
+
+.game-play:hover,
+.game-stop:hover,
+.game-replay:hover {
+  transform: scale(1.1);
 }
 
 .game-time {
