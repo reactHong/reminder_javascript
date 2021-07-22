@@ -83,8 +83,7 @@ class Game {
     this.stopTimer();
     this.hide(this.stopBtn, true);
     this.hide(this.playBtn);
-    this.show(this.divGameover);
-    this.divGameover.querySelector('.game-endtext').innerHTML = 'Replay?';
+    this.showPopupWithText('Replay❓');
 
     this.bgSound.pause();
   }
@@ -100,8 +99,7 @@ class Game {
     this.stopTimer();
     this.hide(this.stopBtn, true);
     this.hide(this.playBtn);
-    this.show(this.divGameover);
-    this.divGameover.querySelector('.game-endtext').innerHTML = 'YOU LOST';
+    this.showPopupWithText('YOU LOST');
 
     this.bgSound.pause();
   }
@@ -110,8 +108,7 @@ class Game {
     this.stopTimer();
     this.hide(this.stopBtn, true);
     this.hide(this.playBtn);
-    this.show(this.divGameover);
-    this.divGameover.querySelector('.game-endtext').innerHTML = 'YOU WON';
+    this.showPopupWithText('YOU WON');
 
     this.winSound.play();
   }
@@ -121,6 +118,9 @@ class Game {
     this.divCarrots.innerHTML = this.carrots;
   }
 
+  showPopupWithText(text) {
+    this.show(this.divGameover);
+    this.divGameover.querySelector('.game-endtext').innerHTML = text;
   }
 
   clickCarrot(carrot) {
