@@ -3,6 +3,12 @@ body {
   margin: 0;
 }
 
+button {
+  border: none;
+  outline: none;
+  cursor: pointer;
+}
+
 main {
   width: 1000px;
   height: 600px;
@@ -40,9 +46,10 @@ main {
 .game-stop,
 .game-replay {
   background-color: moccasin;
+  border: 2px solid black;
+  border-radius: 10px;
   width: 70px;
   height: 70px;
-  border-radius: 10px;
   transition: all 0.1s ease-in-out;
 }
 
