@@ -13,7 +13,7 @@ export default class Popup {
 
   replay() {
     this.onClick && this.onClick();
-    this.hide();
+    this._hide();
   }
 
   showWithText(text) {
@@ -21,7 +21,7 @@ export default class Popup {
     this.divPopup.querySelector('.game-endtext').innerHTML = text;
   }
 
-  hide() {
+  _hide() {
     if (!this.divPopup.matches('.hide')) this.divPopup.classList.add('hide');
   }
 }
