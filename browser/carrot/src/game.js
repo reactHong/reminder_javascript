@@ -68,6 +68,7 @@ class Game {
     this.timeLimit = this.duration;
     this.score = 0;
     this.field.init();
+    this.invalidateCarrotCount(this.carrots);
   }
 
   start() {
@@ -79,14 +80,7 @@ class Game {
     if (this.timer) {
       this.stop();
     } else {
-      this.timer = setInterval(() => {
-        this.timeLimit--;
-        this.invalidate();
-
-        if (this.timeLimit === 0) {
-          this.gameover();
-        }
-      }, 1000);
+      this.startTimer();
       this.showStopButton();
       sound.playBackground();
     }
@@ -98,6 +92,20 @@ class Game {
     this.onFinish && this.onFinish(Reason.stop);
   }
 
+  startTimer() {
+    let timeLimit = this.duration;
+    this.invalidateTime(timeLimit);
+
+    this.timer = setInterval(() => {
+      timeLimit--;
+      this.invalidateTime(timeLimit);
+
+      if (timeLimit === 0) {
+        this.gameover();
+      }
+    }, 1000);
+  }
+
   stopTimer() {
     clearInterval(this.timer);
     this.timer = null;
@@ -105,7 +113,6 @@ class Game {
 
   replay() {
     this.start();
-    this.invalidate();
     this.play();
   }
 
@@ -121,15 +128,18 @@ class Game {
     this.onFinish && this.onFinish(Reason.win);
   }
 
-  invalidate() {
-    this.divTime.innerHTML = `0:${this.timeLimit}`;
-    this.divCarrots.innerHTML = this.carrots - this.score;
+  invalidateTime(timeLimit) {
+    this.divTime.innerHTML = `0:${timeLimit}`;
+  }
+
+  invalidateCarrotCount(count) {
+    this.divCarrots.innerHTML = count;
   }
 
   clickCarrot() {
     this.score++;
     this.score === this.carrots ? this.win() : '';
-    this.invalidate();
+    this.invalidateCarrotCount(this.carrots - this.score);
     sound.playCarrot();
   }
 
