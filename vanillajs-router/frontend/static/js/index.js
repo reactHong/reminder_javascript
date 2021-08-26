@@ -1,8 +1,12 @@
+import DashboardView from "./views/DashboardView.js";
+import PostsView from "./views/PostsView.js";
+import SettingsView from "./views/SettingsView.js";
+
 const router = async () => {
   const routes = [
-    { path: "/", view: () => console.log("Viewing Home") },
-    { path: "/posts", view: () => console.log("Viewing Posts") },
-    { path: "/settings", view: () => console.log("Viewing Setting") },
+    { path: "/", view: DashboardView },
+    { path: "/posts", view: PostsView },
+    { path: "/settings", view: SettingsView },
   ];
 
   const potentialMatches = routes.map(route => {
@@ -21,7 +25,8 @@ const router = async () => {
     }
   }
 
-  match.route.view();
+  const view = new match.route.view();
+  document.querySelector("#app").innerHTML = await view.getHtml();
 };
 
 const navigateTo = (url) => {
