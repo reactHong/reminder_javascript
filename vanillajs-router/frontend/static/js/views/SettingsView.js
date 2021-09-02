@@ -1,8 +1,8 @@
 import AbstractView from "./AbstractView.js";
 
-export default class extends AbstractView {
-  constructor() {
-    super();
+export default class SettingsView extends AbstractView {
+  constructor(params) {
+    super(params);
     this.setTitle("Settings");
   }
 
