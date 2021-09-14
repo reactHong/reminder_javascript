@@ -1,0 +1,50 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta http-equiv="X-UA-Compatible" content="IE=edge">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>FP - map</title>
+</head>
+<body>
+  <script>
+    const products = [
+      { name: '반팔티', price: 15000 },
+      { name: '긴팔티', price: 20000 },
+      { name: '핸드폰케이스', price: 15000 },
+      { name: '후드티', price: 30000 },
+      { name: '바지', price: 25000 },
+    ];
+
+    function map(func, iter) {
+      const res = [];
+      for (const item of iter) {
+        res.push(func(item));
+      }
+      return res;
+    }
+
+    const names = map(item => item.name, products);
+    const prices = map(item => item.price, products);
+
+    console.log(names);
+    console.log(prices);
+  </script>
+  <script>
+    const elements = document.querySelectorAll('*');
+    const tagNames = map(el => el.nodeName, elements);
+    
+    console.log(tagNames);
+
+    function *gen() {
+      yield 2;
+      if (false) yield 3;
+      yield 4;
+    }
+
+    const results = map(el => el * el, gen());
+
+    console.log(results);
+  </script>
+</body>
+</html>
