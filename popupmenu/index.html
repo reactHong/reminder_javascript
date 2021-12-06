@@ -1,0 +1,63 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Document</title>
+    <style>
+      .emptybox {
+        height: 200px;
+      }
+      .box {
+        /* background-color: yellow; */
+        text-align: right;
+        margin-right: 100px;
+      }
+      .popup-menu-lang {
+        /* display: none; */
+        border: 1px solid black;
+        position: absolute;
+      }
+      .popup-menu-lang__item {
+        padding: 5px;
+      }
+      .popup-menu-lang__item:hover {
+        background-color: yellow;
+        cursor: pointer;
+        user-select: none;
+      }
+    </style>
+  </head>
+  <body>
+    <div class="emptybox"></div>
+    <div class="box">
+      <input type="button" id="button" value="button" />
+    </div>
+    <div class="popup-menu-lang">
+      <div class="popup-menu-lang__item">Item #1</div>
+      <div class="popup-menu-lang__item">Item #2</div>
+      <div class="popup-menu-lang__item">Item #3</div>
+      <div class="popup-menu-lang__divider"></div>
+      <div class="popup-menu-lang__item">Item #4</div>
+    </div>
+    <script>
+      const button = document.querySelector('#button');
+      const menu = document.querySelector('.popup-menu-lang');
+      button.addEventListener('click', (e) => {
+        console.log(button);
+
+        const height = menu.getBoundingClientRect().height;
+        const x = button.getBoundingClientRect().x;
+        const y = button.getBoundingClientRect().y - height - 5;
+
+        menu.style.left = x + 'px';
+        menu.style.top = y + 'px';
+      });
+
+      menu.addEventListener('click', (e) => {
+        console.log(e.target);
+      });
+    </script>
+  </body>
+</html>
